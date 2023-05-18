@@ -1,7 +1,6 @@
 ﻿@using ECommerceApp.Blazor.Shared.Request
 @using ECommerceApp.Blazor.Shared.Response
 @inject HttpClient Http
-@inject NavigationManager NavigationManager
 
 <h3>Producto</h3>
 
@@ -43,8 +42,12 @@
 
 @code {
 
+    [Parameter]
     public ProductoDtoRequest Request { get; set; }
     public List<CategoriaDto> Categorias { get; set; } = new List<CategoriaDto>();
+
+    [Parameter]
+    public EventCallback GuardarCallBack { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -56,9 +59,7 @@
 
     public async Task Guardar()
     {
-        // Llamar al API para guardar los datos.
-        await Http.PostAsJsonAsync("api/Productos", Request);
-        NavigationManager.NavigateTo("/productos/list");
+        await GuardarCallBack.InvokeAsync();
     }
 
 }

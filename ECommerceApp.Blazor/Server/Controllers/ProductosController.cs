@@ -56,7 +56,7 @@ public class ProductosController : ControllerBase
 
 
     [HttpPost]
-    public async Task<IActionResult> Post([FromBody]ProductoDtoRequest request)
+    public async Task<IActionResult> Post([FromBody] ProductoDtoRequest request)
     {
         var producto = new Producto()
         {
@@ -67,6 +67,45 @@ public class ProductosController : ControllerBase
         };
 
         await _context.Set<Producto>().AddAsync(producto);
+        await _context.SaveChangesAsync();
+
+        return Ok();
+    }
+
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> Get(int id)
+    {
+        var data = await _context.Set<Producto>()
+            .FindAsync(id);
+
+        if (data == null)
+            return NotFound();
+
+        var producto = new ProductoDto
+        {
+            Id = data.Id,
+            Nombre = data.Nombre,
+            PrecioUnitario = data.PrecioUnitario,
+            IdCategoria = data.CategoriaId,
+        };
+
+        return Ok(producto);
+    }
+
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> Put(int id, ProductoDtoRequest request)
+    {
+        var data = await _context.Set<Producto>()
+                    .FindAsync(id);
+
+        if (data == null)
+            return NotFound();
+
+        data.Nombre = request.Nombre;
+        data.CodigoSku = request.CodigoSku;
+        data.CategoriaId = request.IdCategoria;
+        data.PrecioUnitario = request.PrecioUnitario;
+
         await _context.SaveChangesAsync();
 
         return Ok();

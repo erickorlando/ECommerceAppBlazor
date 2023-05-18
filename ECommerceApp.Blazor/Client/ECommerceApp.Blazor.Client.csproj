@@ -20,12 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <_ContentIncludedByDefault Remove="Pages\Productos\ProductosPageEdit.razor" />
     <_ContentIncludedByDefault Remove="Shared\Productos\ProductoEdit.razor" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <UpToDateCheckInput Remove="Pages\Productos\ProductosPageEdit.razor" />
   </ItemGroup>
 
 </Project>

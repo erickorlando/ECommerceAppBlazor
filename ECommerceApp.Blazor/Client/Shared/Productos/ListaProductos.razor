@@ -1,4 +1,6 @@
 ﻿@using ECommerceApp.Blazor.Shared.Response;
+@inject NavigationManager NavigationManager
+
 <h3>Lista de Productos</h3>
 
 @if (Lista == null)
@@ -19,6 +21,9 @@ else
             <th class="table-primary">
                 Precio Unitario
             </th>
+            <th>
+                Acciones
+            </th>
         </tr>
 
         @foreach (var item in Lista)
@@ -27,6 +32,9 @@ else
                 <td class="table-info"> @item.Nombre</td>
                 <td class="table-info"> @item.Categoria</td>
                 <td class="table-info"> S/. @item.PrecioUnitario.ToString("N2")</td>
+                <td>
+                    <button class="btn btn-dark" @onclick="() => Editar(item.Id)">Editar</button>
+                </td>
             </tr>
         }
 
@@ -40,4 +48,8 @@ else
     public List<ProductoDto>? Lista { get; set; }
 
 
+    private void Editar(int id)
+    {
+        NavigationManager.NavigateTo($"/productos/editar/{id}");
+    }
 }
