@@ -1,0 +1,64 @@
+﻿@using ECommerceApp.Blazor.Shared.Request
+@using ECommerceApp.Blazor.Shared.Response
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+<h3>Producto</h3>
+
+<EditForm Model="Request" OnSubmit="Guardar">
+
+    <div class="mb-3 row">
+        <label for="name" class="col-sm-2 col-form-label">Nombre:</label>
+        <div class="col-sm-8">
+            <input class="form-control" type="text" id="name" @bind-value="Request.Nombre" />
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label for="sku" class="col-sm-2 col-form-label">Codigo SKU:</label>
+        <div class="col-sm-8">
+            <input class="form-control" type="text" id="sku" @bind-value="Request.CodigoSku" />
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label for="category" class="col-sm-2 col-form-label">Categoria:</label>
+        <div class="col-sm-8">
+            <select class="form-select" id="category" @bind="Request.IdCategoria">
+                <option>-Seleccione-</option>
+                @foreach (var item in Categorias)
+                {
+                    <option value="@item.Id">@item.Nombre</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label for="unitprice" class="col-sm-2 col-form-label">Precio Unitario:</label>
+        <div class="col-sm-8">
+            <input class="form-control" type="text" id="unitprice" @bind-value="Request.PrecioUnitario" />
+        </div>
+    </div>
+    <button type="submit" class="btn btn-success">Guardar</button>
+
+</EditForm>
+
+@code {
+
+    public ProductoDtoRequest Request { get; set; }
+    public List<CategoriaDto> Categorias { get; set; } = new List<CategoriaDto>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Request = new ProductoDtoRequest();
+        var response = await Http.GetFromJsonAsync<List<CategoriaDto>>("api/Categorias");
+        if (response != null)
+            Categorias = response;
+    }
+
+    public async Task Guardar()
+    {
+        // Llamar al API para guardar los datos.
+        await Http.PostAsJsonAsync("api/Productos", Request);
+        NavigationManager.NavigateTo("/productos/list");
+    }
+
+}

@@ -1,0 +1,27 @@
+﻿@page "/"
+@page "/index"
+@using ECommerceApp.Blazor.Shared.Response
+@using ECommerceApp.Blazor.Client.Shared.Productos
+
+<PageTitle>ECommerceApp</PageTitle>
+
+<ListaProductos Lista="Productos" />
+
+@code
+{
+    public List<ProductoDto>? Productos { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(3000);
+
+        Productos = new List<ProductoDto>
+        {
+            new ProductoDto { Id = 1, Nombre = "Monitor 24''", Categoria = "Monitores", PrecioUnitario = 500 },
+            new ProductoDto { Id = 2, Nombre = "Laptop Lenovo", Categoria = "Computadoras", PrecioUnitario = 5000 },
+            new ProductoDto { Id = 3, Nombre = "Teclado Gamer", Categoria = "Perifericos", PrecioUnitario = 80 },
+            new ProductoDto { Id = 4, Nombre = "Impresora Epson L240", Categoria = "Impresoras", PrecioUnitario = 720 },
+            new ProductoDto { Id = 5, Nombre = "Impresora HP", Categoria = "Impresoras", PrecioUnitario = 800 },
+        };
+    }
+}

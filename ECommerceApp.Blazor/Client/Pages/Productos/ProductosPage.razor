@@ -1,0 +1,30 @@
+﻿@page "/productos/list"
+@using ECommerceApp.Blazor.Client.Shared.Productos
+@using ECommerceApp.Blazor.Shared.Response
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+<ListaProductos Lista="ListaDeProductos" />
+
+<button @onclick="CargarLista" class="btn btn-success">Cargar Lista</button>
+<button @onclick="CrearProducto" class="btn btn-success">Crear Producto</button>
+
+@code {
+    public List<ProductoDto>? ListaDeProductos { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarLista();
+    }
+
+    private void CrearProducto()
+    {
+        NavigationManager.NavigateTo("/productos/crear");
+    }
+
+    private async Task CargarLista()
+    {
+        ListaDeProductos = await Http.GetFromJsonAsync<List<ProductoDto>>("api/Productos");
+    }
+
+}

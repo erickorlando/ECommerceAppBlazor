@@ -1,0 +1,43 @@
+﻿@using ECommerceApp.Blazor.Shared.Response;
+<h3>Lista de Productos</h3>
+
+@if (Lista == null)
+{
+    <p>Cargando.....</p>
+    <img src="https://www.superiorlawncareusa.com/wp-content/uploads/2020/05/loading-gif-png-5.gif" width="100px" height="100px" />
+}
+else
+{
+    <table class="table-primary table-dark table-striped" width="80%">
+        <tr class="table-primary">
+            <th class="table-primary">
+                Nombre
+            </th>
+            <th>
+                Categoria
+            </th>
+            <th class="table-primary">
+                Precio Unitario
+            </th>
+        </tr>
+
+        @foreach (var item in Lista)
+        {
+            <tr class="table-primary">
+                <td class="table-info"> @item.Nombre</td>
+                <td class="table-info"> @item.Categoria</td>
+                <td class="table-info"> S/. @item.PrecioUnitario.ToString("N2")</td>
+            </tr>
+        }
+
+    </table>
+}
+
+@code
+{
+
+    [Parameter]
+    public List<ProductoDto>? Lista { get; set; }
+
+
+}
