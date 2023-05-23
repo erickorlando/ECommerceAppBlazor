@@ -23,4 +23,8 @@
     <_ContentIncludedByDefault Remove="Shared\Productos\ProductoEdit.razor" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\" />
+  </ItemGroup>
+
 </Project>

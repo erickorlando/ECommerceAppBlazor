@@ -1,0 +1,29 @@
+﻿@page "/productos/editar/{Id:int}"
+@inject NavigationManager NavigationManager
+@inject ProxyCategorias ProxyCategorias
+@inject ProxyProductos ProxyProductos
+
+<ProductoEdit Request="Producto" Categorias="Categorias" GuardarCallBack="ActualizarProducto" />
+
+@code {
+
+    [Parameter]
+    public int Id { get; set; }
+
+    public ProductoDtoRequest Producto { get; set; } = new ProductoDtoRequest();
+
+    public ICollection<CategoriaDto> Categorias { get; set; } = new List<CategoriaDto>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Categorias = await ProxyCategorias.ListarCategorias();
+        Producto = await ProxyProductos.GetProducto(Id);
+    }
+
+    private async Task ActualizarProducto()
+    {
+        await ProxyProductos.ActualizarProducto(Id, Producto);
+        NavigationManager.NavigateTo("/productos/list");
+    }
+
+}

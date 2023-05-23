@@ -1,18 +1,25 @@
 ﻿@page "/productos/crear"
-@using ECommerceApp.Blazor.Shared.Request
-@inject HttpClient Http
 @inject NavigationManager NavigationManager
+@inject ProxyCategorias ProxyCategorias
+@inject ProxyProductos ProxyProductos
 
-<ProductoEdit Request="Request" GuardarCallBack="GrabarNuevoProducto" />
+<ProductoEdit Request="Request" Categorias="Categorias" GuardarCallBack="GrabarNuevoProducto" />
 
 @code {
 
-    public ProductoDtoRequest Request { get; set; }
+    public ProductoDtoRequest Request { get; set; } = null!;
+    public ICollection<CategoriaDto> Categorias { get; set; } = new List<CategoriaDto>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Request = new ProductoDtoRequest();
+        Categorias = await ProxyCategorias.ListarCategorias();
+    }
 
     private async Task GrabarNuevoProducto()
     {
         // Llamar al API para guardar los datos.
-        await Http.PostAsJsonAsync("api/Productos", Request);
+        await ProxyProductos.CrearProducto(Request);
         NavigationManager.NavigateTo("/productos/list");
     }
 

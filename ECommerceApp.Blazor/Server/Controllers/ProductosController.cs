@@ -1,4 +1,5 @@
-﻿using ECommerceApp.Blazor.Shared.Request;
+﻿using System.Linq.Expressions;
+using ECommerceApp.Blazor.Shared.Request;
 using ECommerceApp.Blazor.Shared.Response;
 using ECommerceApp.DataAccess;
 using ECommerceApp.Entities;
@@ -19,7 +20,7 @@ public class ProductosController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> Get()
+    public async Task<IActionResult> Get(string? filter, int page = 1, int rows = 5)
     {
         // Eager Loading
 
@@ -39,19 +40,39 @@ public class ProductosController : ControllerBase
 
         // Lazy Loading
 
-        var productos = await _context.Set<Producto>()
-            .Where(p => p.Estado)
+        var response = new PaginationResponse<ProductoDto>();
+
+        Expression<Func<Producto, bool>> predicate = p => p.Estado 
+                                                           && p.Nombre.Contains(filter ?? string.Empty);
+        var productos = await _context.Producto
+            .Where(predicate)
+            .OrderBy(p => p.CodigoSku)
+            .Skip((page - 1) * rows)
+            .Take(rows)
             .Select(p => new ProductoDto
             {
                 Id = p.Id,
                 Categoria = p.Categoria.NombreCategoria,
                 Nombre = p.Nombre,
                 PrecioUnitario = p.PrecioUnitario,
+                Comentarios = p.Comentarios
             })
             .AsNoTracking()
             .ToListAsync();
 
-        return Ok(productos);
+        var count = await _context.Producto
+            .Where(predicate)
+            .CountAsync();
+
+        response.Data = productos;
+        var totalPages = count / rows;
+        if (count % rows != 0)
+            totalPages++;
+
+        response.TotalPages = totalPages;
+        response.Success = true;
+
+        return Ok(response);
     }
 
 

@@ -9,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ECommerceDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("ECommerceDb"));
+    options.EnableSensitiveDataLogging();
 });
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();

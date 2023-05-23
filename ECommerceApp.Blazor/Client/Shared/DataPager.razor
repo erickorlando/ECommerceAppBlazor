@@ -1,0 +1,101 @@
+﻿@if (Result == null)
+{
+    <strong>Cargando....</strong>
+}
+else
+{
+    <div class="row pb-5">
+        <div class="col-md-2 col-sm-2">
+            Filas por pagina:
+            <select @onchange="PaginationSizeChanged">
+                <option>5</option>
+                <option>10</option>
+                <option>20</option>
+                <option>50</option>
+            </select>
+        </div>
+        <div class="col-md-8 col-sm-8">
+            @if (Result.TotalPages > 1)
+            {
+                <ul class="pagination">
+                    <li class="page-item">
+                        <button class="page-link btn" @onclick="OnPreviousClicked"><span class="oi oi-arrow-left"></span></button>
+                    </li>
+                    @for (int index = 1; index <= Result.TotalPages; index++)
+                    {
+                        var currentIndex = index;
+                        @if (Result.CurrentPage == index)
+                        {
+                            <li class="page-item active">
+                                <button class="page-link btn">@index</button>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="page-item">
+                                <button class="page-link btn" @onclick="() => OnPageClicked(currentIndex)" >@index</button>
+                            </li>
+                        }
+                    }
+                    <li class="page-item">
+                        <button class="page-link btn" @onclick="OnNextClicked"><span class="oi oi-arrow-right"></span></button>
+                    </li>
+                </ul>
+            }
+        </div>
+    </div>
+}
+
+@code {
+
+    [Parameter]
+    public PaginationDataBase? Result { get; set; }
+
+    [Parameter]
+    public EventCallback OnPageChanged { get; set; }
+
+    [Parameter]
+    public EventCallback OnPageSizeChanged { get; set; }
+
+    private async Task OnPageClicked(int page)
+    {
+        if (Result == null) return;
+        Result.CurrentPage = page;
+        await OnPageChanged.InvokeAsync(page);
+    }
+
+    private async Task OnPreviousClicked()
+    {
+        if (Result?.CurrentPage > 1)
+        {
+            Result.CurrentPage--;
+            await OnPageChanged.InvokeAsync();
+        }
+    }
+
+    private async Task OnNextClicked()
+    {
+        if (Result?.CurrentPage < Result?.TotalPages)
+        {
+            Result.CurrentPage++;
+            await OnPageChanged.InvokeAsync();
+        }
+    }
+
+    private void OnPageSizeClicked(int size)
+    {
+        if (Result == null) return;
+        Result.RowsPerPage = size;
+        OnPageSizeChanged.InvokeAsync();
+    }
+
+    private string _selectedValue = "5";
+
+    private void PaginationSizeChanged(ChangeEventArgs e)
+    {
+        if (e.Value == null) return;
+        _selectedValue = e.Value.ToString() ?? "5";
+        OnPageSizeClicked(int.Parse(_selectedValue));
+    }
+
+}

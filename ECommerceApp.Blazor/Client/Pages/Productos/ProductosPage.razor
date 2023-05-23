@@ -1,19 +1,26 @@
 ﻿@page "/productos/list"
-@using ECommerceApp.Blazor.Client.Shared.Productos
-@using ECommerceApp.Blazor.Shared.Response
-@inject HttpClient Http
 @inject NavigationManager NavigationManager
+@inject ProxyProductos ProxyProductos
 
-<ListaProductos Lista="ListaDeProductos" />
+<ListaProductos @ref="Componente" Lista="ListaDeProductos" OnSearch="CargarLista" />
+<DataPager @ref="Paginador" Result="PagedResult" OnPageChanged="PaginaCambiada" OnPageSizeChanged="FilasPorPagina"></DataPager>
+
 
 <button @onclick="CargarLista" class="btn btn-success">Cargar Lista</button>
 <button @onclick="CrearProducto" class="btn btn-success">Crear Producto</button>
 
 @code {
-    public List<ProductoDto>? ListaDeProductos { get; set; }
+    public ICollection<ProductoDto>? ListaDeProductos { get; set; }
+
+    public ListaProductos Componente { get; set; } = null!;
 
     protected override async Task OnInitializedAsync()
     {
+        PagedResult = new PagedResult<ProductoDto>
+            {
+                CurrentPage = 1,
+                RowsPerPage = 5
+            };
         await CargarLista();
     }
 
@@ -24,7 +31,32 @@
 
     private async Task CargarLista()
     {
-        ListaDeProductos = await Http.GetFromJsonAsync<List<ProductoDto>>("api/Productos");
+        var response = await ProxyProductos.ListarProductos(Componente?.TextoBusqueda, PagedResult.CurrentPage, PagedResult.RowsPerPage);
+        if (response.Success)
+        {
+            ListaDeProductos = response.Data!;
+            PagedResult.Results = ListaDeProductos;
+            PagedResult.RowCount = ListaDeProductos.Count;
+            PagedResult.TotalPages = response.TotalPages;
+        }
+    }
+
+    public DataPager Paginador { get; set; } = null!;
+
+    public PagedResult<ProductoDto> PagedResult { get; set; } = null!;
+
+
+    private async Task PaginaCambiada()
+    {
+        Console.WriteLine("Pagina Cambiada");
+        await CargarLista();
+    }
+
+    private async Task FilasPorPagina()
+    {
+        Console.WriteLine($"Cambio el tamaño de la pagina a {PagedResult.RowsPerPage}");
+        Paginador.Result = PagedResult;
+        await CargarLista();
     }
 
 }

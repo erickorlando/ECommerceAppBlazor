@@ -3,50 +3,74 @@
 
 <h3>Lista de Productos</h3>
 
-@if (Lista == null)
-{
-    <p>Cargando.....</p>
-    <img src="https://www.superiorlawncareusa.com/wp-content/uploads/2020/05/loading-gif-png-5.gif" width="100px" height="100px" />
-}
-else
-{
-    <table class="table-primary table-dark table-striped" width="80%">
-        <tr class="table-primary">
-            <th class="table-primary">
-                Nombre
-            </th>
-            <th>
-                Categoria
-            </th>
-            <th class="table-primary">
-                Precio Unitario
-            </th>
-            <th>
-                Acciones
-            </th>
-        </tr>
+<div class="container">
+    <div class="row pt-4 pb-4">
+        <div class="input-group">
+            <input type="text" class="form-control m-1" style="padding-right: 5px " placeholder="Buscar..." @bind="TextoBusqueda"/>
+            <button class="btn btn-primary" @onclick="OnSearch">Buscar</button>
+        </div>
+    </div>
+</div>
+<div class="row">
 
-        @foreach (var item in Lista)
-        {
-            <tr class="table-primary">
-                <td class="table-info"> @item.Nombre</td>
-                <td class="table-info"> @item.Categoria</td>
-                <td class="table-info"> S/. @item.PrecioUnitario.ToString("N2")</td>
-                <td>
-                    <button class="btn btn-dark" @onclick="() => Editar(item.Id)">Editar</button>
-                </td>
-            </tr>
-        }
 
-    </table>
-}
+
+    @if (Lista == null)
+    {
+        <LoadingComponent />
+    }
+    else
+    {
+        <table class="table table-primary table-striped table-hover" width="80%">
+            <thead>
+                <tr class="table-primary">
+                    <th class="table-primary">
+                        Nombre
+                    </th>
+                    <th>
+                        Categoria
+                    </th>
+                    <th class="table-primary">
+                        Precio Unitario
+                    </th>
+                    <th class="table-primary">
+                        Comentarios
+                    </th>
+                    <th class="table-primary">
+                        Acciones
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Lista)
+                {
+                    <tr class="table-primary">
+                        <td class="table-primary"> @item.Nombre</td>
+                        <td class="table-primary"> @item.Categoria</td>
+                        <td class="table-primary"> S/. @item.PrecioUnitario.ToString("N2")</td>
+                        <td class="table-primary"> @item.Comentarios</td>
+                        <td>
+                            <button class="btn btn-success" @onclick="() => Editar(item.Id)">Editar</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+    }
+</div>
 
 @code
 {
 
     [Parameter]
-    public List<ProductoDto>? Lista { get; set; }
+    public ICollection<ProductoDto>? Lista { get; set; }
 
+
+    [Parameter]
+    public EventCallback OnSearch { get; set; }
+
+    public string? TextoBusqueda { get; set; }
 
     private void Editar(int id)
     {
