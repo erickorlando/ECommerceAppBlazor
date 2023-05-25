@@ -56,11 +56,7 @@ app.MapFallbackToFile("index.html");
 
 app.MapGet("api/Categorias", async (ICategoriaRepository repository) =>
 {
-    var collection = await repository.ListAsync(c => c.Estado, p => new CategoriaDto
-    {
-        Id = p.Id,
-        Nombre = p.NombreCategoria
-    });
+    var collection = await repository.ListAsync();
 
     return Results.Ok(collection);
 });
