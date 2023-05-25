@@ -2,7 +2,7 @@
 @inject NavigationManager NavigationManager
 @inject ProxyProductos ProxyProductos
 
-<ListaProductos @ref="Componente" Lista="ListaDeProductos" OnSearch="CargarLista" />
+<ListaProductos @ref="Componente" Lista="ListaDeProductos" OnSearch="CargarLista" OnEliminar="EliminarRegistro" />
 <DataPager @ref="Paginador" Result="PagedResult" OnPageChanged="PaginaCambiada" OnPageSizeChanged="FilasPorPagina"></DataPager>
 
 
@@ -13,6 +13,11 @@
     public ICollection<ProductoDto>? ListaDeProductos { get; set; }
 
     public ListaProductos Componente { get; set; } = null!;
+
+    public DataPager Paginador { get; set; } = null!;
+
+    public PagedResult<ProductoDto> PagedResult { get; set; } = null!;
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -41,11 +46,6 @@
         }
     }
 
-    public DataPager Paginador { get; set; } = null!;
-
-    public PagedResult<ProductoDto> PagedResult { get; set; } = null!;
-
-
     private async Task PaginaCambiada()
     {
         Console.WriteLine("Pagina Cambiada");
@@ -56,6 +56,12 @@
     {
         Console.WriteLine($"Cambio el tamaño de la pagina a {PagedResult.RowsPerPage}");
         Paginador.Result = PagedResult;
+        await CargarLista();
+    }
+
+    private async Task EliminarRegistro(int id)
+    {
+        await ProxyProductos.ElminarProducto(id);
         await CargarLista();
     }
 

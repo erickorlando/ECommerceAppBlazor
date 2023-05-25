@@ -1,5 +1,6 @@
 ﻿@using ECommerceApp.Blazor.Shared.Response;
 @inject NavigationManager NavigationManager
+@inject SweetAlertService SweetAlertService
 
 <h3>Lista de Productos</h3>
 
@@ -51,6 +52,7 @@
                         <td class="table-primary"> @item.Comentarios</td>
                         <td>
                             <button class="btn btn-success" @onclick="() => Editar(item.Id)">Editar</button>
+                            <button class="btn btn-danger" @onclick="() => Eliminar(item.Id)">Eliminar</button>
                         </td>
                     </tr>
                 }
@@ -70,10 +72,29 @@
     [Parameter]
     public EventCallback OnSearch { get; set; }
 
+    [Parameter]
+    public EventCallback<int> OnEliminar { get; set; }
+
     public string? TextoBusqueda { get; set; }
 
     private void Editar(int id)
     {
         NavigationManager.NavigateTo($"/productos/editar/{id}");
+    }
+
+    private async Task Eliminar(int id)
+    {
+        var result = await SweetAlertService.FireAsync(new SweetAlertOptions
+        {
+            Text = "Desea eliminar el registro?",
+            Title = "Eliminar",
+            Icon = SweetAlertIcon.Question,
+            ConfirmButtonText = "Si",
+            CancelButtonText = "No",
+            ShowCancelButton = true
+        });
+
+        if (result.IsConfirmed)
+            await OnEliminar.InvokeAsync(id);
     }
 }

@@ -1,6 +1,9 @@
 using ECommerceApp.Blazor.Shared.Response;
 using ECommerceApp.DataAccess;
-using ECommerceApp.Entities;
+using ECommerceApp.Repositories.Implementations;
+using ECommerceApp.Repositories.Interfaces;
+using ECommerceApp.Services;
+using ECommerceApp.Services.Profiles;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +14,17 @@ builder.Services.AddDbContext<ECommerceDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ECommerceDb"));
     options.EnableSensitiveDataLogging();
 });
+
+builder.Services.AddAutoMapper(config =>
+{
+    config.AddProfile<ProductoProfile>();
+});
+
+builder.Services.AddTransient<ICategoriaRepository, CategoriaRepository>();
+builder.Services.AddTransient<IProductoRepository, ProductoRepository>();
+
+builder.Services.AddTransient<IProductoService, ProductoService>();
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
@@ -40,19 +54,15 @@ app.MapRazorPages();
 app.MapControllers();
 app.MapFallbackToFile("index.html");
 
-app.MapGet("api/Categorias", async (ECommerceDbContext context) =>
+app.MapGet("api/Categorias", async (ICategoriaRepository repository) =>
 {
-    var categorias = await context.Set<Categoria>()
-        .Where(c => c.Estado)
-        .Select(p => new CategoriaDto
-        {
-            Id = p.Id,
-            Nombre = p.NombreCategoria
-        })
-        .AsNoTracking()
-        .ToListAsync();
+    var collection = await repository.ListAsync(c => c.Estado, p => new CategoriaDto
+    {
+        Id = p.Id,
+        Nombre = p.NombreCategoria
+    });
 
-    return Results.Ok(categorias);
+    return Results.Ok(collection);
 });
 
 app.Run();

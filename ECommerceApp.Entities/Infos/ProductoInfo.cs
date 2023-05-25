@@ -1,6 +1,6 @@
-﻿namespace ECommerceApp.Blazor.Shared.Response;
+﻿namespace ECommerceApp.Entities.Infos;
 
-public class ProductoDto
+public class ProductoInfo
 {
     public int Id { get; set; }
     public string CodigoSku { get; set; } = null!;

@@ -26,9 +26,11 @@ public class ProxyProductos
 
     public async Task<ProductoDtoRequest> GetProducto(int id)
     {
-        var response = await _httpClient.GetFromJsonAsync<ProductoDtoRequest>($"api/Productos/{id}");
-        if (response != null)
-            return response;
+        var response = await _httpClient.GetFromJsonAsync<BaseResponseGeneric<ProductoDtoRequest>>($"api/Productos/{id}");
+        if (response!.Success)
+        {
+            return response.Data!;
+        }
 
         throw new InvalidOperationException("No se encontro el registro");
     }
@@ -41,5 +43,10 @@ public class ProxyProductos
     public async Task ActualizarProducto(int id, ProductoDtoRequest request)
     {
         await _httpClient.PutAsJsonAsync($"api/Productos/{id}", request);
+    }
+
+    public async Task ElminarProducto(int id)
+    {
+        await _httpClient.DeleteAsync($"api/Productos/{id}");
     }
 }

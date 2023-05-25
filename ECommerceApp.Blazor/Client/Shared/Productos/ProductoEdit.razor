@@ -21,7 +21,7 @@
     <div class="mb-3 row">
         <label for="category" class="col-sm-2 col-form-label">Categoria:</label>
         <div class="col-sm-8">
-            <InputSelect class="form-select" id="category" @bind-Value="@Request.IdCategoria">
+            <InputSelect class="form-select" id="category" @bind-Value="@Request.CategoriaId">
                 <option>-Seleccione-</option>
                 @foreach (var item in Categorias)
                 {
@@ -34,6 +34,12 @@
         <label for="unitprice" class="col-sm-2 col-form-label">Precio Unitario:</label>
         <div class="col-sm-8">
             <InputNumber class="form-control" id="unitprice" @bind-Value="@Request.PrecioUnitario" />
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label for="comments" class="col-sm-2 col-form-label">Comentarios:</label>
+        <div class="col-sm-8">
+            <InputText class="form-control" id="comments" @bind-Value="@Request.Comentarios" />
         </div>
     </div>
     <button type="submit" class="btn btn-success">Guardar</button>

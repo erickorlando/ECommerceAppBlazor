@@ -9,6 +9,7 @@ public class ProductoDtoRequest
 
     [Required]
     public string CodigoSku { get; set; } = null!;
-    public int IdCategoria { get; set; }
+    public int CategoriaId { get; set; }
     public decimal PrecioUnitario { get; set; }
+    public string? Comentarios { get; set; }
 }

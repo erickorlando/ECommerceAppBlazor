@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="7.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.5">
       <PrivateAssets>all</PrivateAssets>
@@ -22,6 +23,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\ECommerceApp.DataAccess\ECommerceApp.DataAccess.csproj" />
+    <ProjectReference Include="..\..\ECommerceApp.Repositories\ECommerceApp.Repositories.csproj" />
+    <ProjectReference Include="..\..\ECommerceApp.Services\ECommerceApp.Services.csproj" />
     <ProjectReference Include="..\Client\ECommerceApp.Blazor.Client.csproj" />
     <ProjectReference Include="..\Shared\ECommerceApp.Blazor.Shared.csproj" />
   </ItemGroup>
