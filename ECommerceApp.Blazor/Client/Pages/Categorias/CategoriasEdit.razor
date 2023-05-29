@@ -1,0 +1,25 @@
+﻿@page "/categorias/editar/{Id:int}"
+@inject ProxyCategorias ProxyCategorias
+@inject NavigationManager NavigationManager
+
+<CategoriaEditComponent Request="Request" OnSave="ActualizarProducto" />
+
+@code {
+
+    [Parameter]
+    public int Id { get; set; }
+
+    public CategoriaDto Request { get; set; } = new CategoriaDto();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Request = await ProxyCategorias.ObtenerCategoria(Id);
+    }
+
+    private async Task ActualizarProducto()
+    {
+        await ProxyCategorias.ActualizarCategoria(Id, Request);
+        NavigationManager.NavigateTo("/categorias/list");
+    }
+
+}

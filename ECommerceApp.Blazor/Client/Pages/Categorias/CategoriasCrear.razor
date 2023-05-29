@@ -1,0 +1,18 @@
+﻿@page "/categorias/crear"
+@inject ProxyCategorias ProxyCategorias
+@inject NavigationManager NavigationManager
+
+<CategoriaEditComponent Request="CategoriaDto" OnSave="GrabarNuevaCategoria" />
+
+@code {
+
+    public CategoriaDto CategoriaDto { get; set; } = new CategoriaDto();
+
+    private async Task GrabarNuevaCategoria()
+    {
+        // Llamar al API para guardar los datos.
+        await ProxyCategorias.AgregarCategoria(CategoriaDto);
+        NavigationManager.NavigateTo("/categorias/list");
+    }
+
+}

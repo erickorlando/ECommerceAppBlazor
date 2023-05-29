@@ -1,0 +1,64 @@
+﻿@inject SweetAlertService Swal
+
+@if (List != null)
+{
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in List)
+            {
+                <tr>
+                    <td>@item.Nombre</td>
+                    <td>
+                        <button class="btn btn-primary" @onclick="() => Edit(item.Id)">Editar</button>
+                        <button class="btn btn-danger" @onclick="() => Delete(item.Id)">Eliminar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No hay registros</p>
+}
+
+@code {
+
+    [Parameter]
+    public ICollection<CategoriaDto>? List { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnEdit { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnDelete { get; set; }
+
+    private async Task Edit(int id)
+    {
+        await OnEdit.InvokeAsync(id);
+    }
+
+    private async Task Delete(int id)
+    {
+        var result = await Swal.FireAsync(new SweetAlertOptions
+        {
+            Text = "Desea eliminar el registro?",
+            Title = "Eliminar",
+            Icon = SweetAlertIcon.Warning,
+            ShowCancelButton = true,
+            ConfirmButtonText = "Si",
+            CancelButtonText = "No"
+        });
+        if (result.IsConfirmed)
+        {
+            await OnDelete.InvokeAsync(id);
+        }
+    }
+
+}

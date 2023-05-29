@@ -1,0 +1,36 @@
+﻿<h3>Categoria</h3>
+
+<EditForm Model="Request" OnValidSubmit="Save">
+    
+    <DataAnnotationsValidator />
+    
+    <div class="row row-cols-1">
+        <div class="mb-3 row">
+            <label class="col-sm-2 form-label" for="nombre">Nombre:</label>
+            <div class="col-sm-6 col-md-9">
+                <InputText @bind-Value="Request.Nombre" id="nombre" class="form-control" />
+                <ValidationMessage For="() => Request.Nombre" />
+            </div>
+        </div>
+    </div>
+    
+    <ValidationSummary />
+    
+    <button type="submit" class="btn btn-success">Grabar</button>
+    <button type="reset" class="btn btn-warning">Limpiar</button>
+    
+</EditForm>
+
+@code {
+
+    [Parameter]
+    public CategoriaDto Request { get; set; } = new CategoriaDto();
+
+    [Parameter]
+    public EventCallback OnSave { get; set; }
+
+    public void Save()
+    {
+        OnSave.InvokeAsync();
+    }
+}

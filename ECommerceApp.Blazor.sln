@@ -25,9 +25,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03 Infraestructura", "03 In
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04. API REST", "04. API REST", "{25F1D226-B3D7-48F5-9E96-32F6364DE31F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECommerceApp.Repositories", "ECommerceApp.Repositories\ECommerceApp.Repositories.csproj", "{F1989016-B9AA-4AC1-B915-97551440DF6D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ECommerceApp.Repositories", "ECommerceApp.Repositories\ECommerceApp.Repositories.csproj", "{F1989016-B9AA-4AC1-B915-97551440DF6D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECommerceApp.Services", "ECommerceApp.Services\ECommerceApp.Services.csproj", "{D9F21C41-E67D-4243-990D-CFB6DAB2CB53}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ECommerceApp.Services", "ECommerceApp.Services\ECommerceApp.Services.csproj", "{D9F21C41-E67D-4243-990D-CFB6DAB2CB53}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

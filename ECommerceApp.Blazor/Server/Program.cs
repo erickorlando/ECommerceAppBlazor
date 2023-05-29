@@ -1,4 +1,3 @@
-using ECommerceApp.Blazor.Shared.Response;
 using ECommerceApp.DataAccess;
 using ECommerceApp.Repositories.Implementations;
 using ECommerceApp.Repositories.Interfaces;
@@ -18,12 +17,14 @@ builder.Services.AddDbContext<ECommerceDbContext>(options =>
 builder.Services.AddAutoMapper(config =>
 {
     config.AddProfile<ProductoProfile>();
+    config.AddProfile<CategoriaProfile>();
 });
 
 builder.Services.AddTransient<ICategoriaRepository, CategoriaRepository>();
 builder.Services.AddTransient<IProductoRepository, ProductoRepository>();
 
 builder.Services.AddTransient<IProductoService, ProductoService>();
+builder.Services.AddTransient<ICategoriaService, CategoriaService>();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
@@ -53,12 +54,5 @@ app.UseRouting();
 app.MapRazorPages();
 app.MapControllers();
 app.MapFallbackToFile("index.html");
-
-app.MapGet("api/Categorias", async (ICategoriaRepository repository) =>
-{
-    var collection = await repository.ListAsync();
-
-    return Results.Ok(collection);
-});
 
 app.Run();

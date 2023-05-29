@@ -22,11 +22,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <_ContentIncludedByDefault Remove="Pages\Categorias\CategoriasListPage.razor" />
     <_ContentIncludedByDefault Remove="Shared\Productos\ProductoEdit.razor" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Services\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Pages\Categorias\CategoriasListPage.razor" />
   </ItemGroup>
 
 </Project>

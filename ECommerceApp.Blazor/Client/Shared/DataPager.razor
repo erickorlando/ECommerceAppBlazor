@@ -6,7 +6,7 @@ else
 {
     <div class="row pb-5">
         <div class="col-md-2 col-sm-2">
-            Filas por pagina:
+            Filas por página:
             <select @onchange="PaginationSizeChanged">
                 <option>5</option>
                 <option>10</option>
@@ -19,7 +19,7 @@ else
             {
                 <ul class="pagination">
                     <li class="page-item">
-                        <button class="page-link btn" @onclick="OnPreviousClicked"><span class="oi oi-arrow-left"></span></button>
+                        <button class="page-link btn" @onclick="OnPreviousClicked"><span class="oi oi-arrow-circle-left"></span></button>
                     </li>
                     @for (int index = 1; index <= Result.TotalPages; index++)
                     {
@@ -33,12 +33,12 @@ else
                         else
                         {
                             <li class="page-item">
-                                <button class="page-link btn" @onclick="() => OnPageClicked(currentIndex)" >@index</button>
+                                <button class="page-link btn" @onclick="() => OnPageClicked(currentIndex)">@index</button>
                             </li>
                         }
                     }
                     <li class="page-item">
-                        <button class="page-link btn" @onclick="OnNextClicked"><span class="oi oi-arrow-right"></span></button>
+                        <button class="page-link btn" @onclick="OnNextClicked"><span class="oi oi-arrow-circle-right"></span></button>
                     </li>
                 </ul>
             }
@@ -89,13 +89,11 @@ else
         OnPageSizeChanged.InvokeAsync();
     }
 
-    private string _selectedValue = "5";
-
     private void PaginationSizeChanged(ChangeEventArgs e)
     {
         if (e.Value == null) return;
-        _selectedValue = e.Value.ToString() ?? "5";
-        OnPageSizeClicked(int.Parse(_selectedValue));
+        var size = int.Parse(e.Value.ToString() ?? "5");
+        OnPageSizeClicked(size);
     }
 
 }

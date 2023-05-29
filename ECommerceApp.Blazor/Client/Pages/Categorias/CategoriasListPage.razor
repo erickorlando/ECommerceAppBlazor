@@ -1,0 +1,41 @@
+﻿@page "/categorias/list"
+@inject ProxyCategorias ProxyCategorias
+@inject NavigationManager NavigationManager
+
+<h3>Lista de Categorias</h3>
+
+<CategoriaListComponent List="List" OnDelete="EliminarCategoria" OnEdit="EditarCategoria" />
+
+<button class="btn btn-primary" @onclick="AgregarCategoria">Agregar Categoria</button>
+
+@code {
+
+    public ICollection<CategoriaDto>? List { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        List = await ProxyCategorias.ListarCategorias();
+    }
+
+    private async Task EliminarCategoria(int id)
+    {
+        await ProxyCategorias.EliminarCategoria(id);
+        await LoadData();
+    }
+
+    private void EditarCategoria(int id)
+    {
+        NavigationManager.NavigateTo($"/categorias/editar/{id}");
+    }
+
+    private void AgregarCategoria()
+    {
+        NavigationManager.NavigateTo("/categorias/crear");
+    }
+
+}

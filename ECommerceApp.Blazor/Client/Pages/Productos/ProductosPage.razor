@@ -2,14 +2,23 @@
 @inject NavigationManager NavigationManager
 @inject ProxyProductos ProxyProductos
 
-<ListaProductos @ref="Componente" Lista="ListaDeProductos" OnSearch="CargarLista" OnEliminar="EliminarRegistro" />
-<DataPager @ref="Paginador" Result="PagedResult" OnPageChanged="PaginaCambiada" OnPageSizeChanged="FilasPorPagina"></DataPager>
-
+@if (_cargado)
+{
+    <ListaProductos @ref="Componente" Lista="ListaDeProductos" OnSearch="CargarLista" OnEliminar="EliminarRegistro" />
+    <DataPager @ref="Paginador" Result="PagedResult" OnPageChanged="PaginaCambiada" OnPageSizeChanged="FilasPorPagina"></DataPager>
+}
+else
+{
+    <LoadingComponent />
+}
 
 <button @onclick="CargarLista" class="btn btn-success">Cargar Lista</button>
 <button @onclick="CrearProducto" class="btn btn-success">Crear Producto</button>
 
 @code {
+
+    private bool _cargado = false;
+
     public ICollection<ProductoDto>? ListaDeProductos { get; set; }
 
     public ListaProductos Componente { get; set; } = null!;
@@ -36,6 +45,7 @@
 
     private async Task CargarLista()
     {
+        _cargado = false;
         var response = await ProxyProductos.ListarProductos(Componente?.TextoBusqueda, PagedResult.CurrentPage, PagedResult.RowsPerPage);
         if (response.Success)
         {
@@ -43,6 +53,7 @@
             PagedResult.Results = ListaDeProductos;
             PagedResult.RowCount = ListaDeProductos.Count;
             PagedResult.TotalPages = response.TotalPages;
+            _cargado = true;
         }
     }
 
