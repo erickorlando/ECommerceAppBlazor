@@ -12,4 +12,6 @@ public class ProductoDtoRequest
     public int CategoriaId { get; set; }
     public decimal PrecioUnitario { get; set; }
     public string? Comentarios { get; set; }
+    public string? Base64Image { get; set; }
+    public string? FileName { get; set; }
 }

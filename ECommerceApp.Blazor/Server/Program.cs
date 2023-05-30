@@ -1,4 +1,5 @@
 using ECommerceApp.DataAccess;
+using ECommerceApp.Entities.Configuration;
 using ECommerceApp.Repositories.Implementations;
 using ECommerceApp.Repositories.Interfaces;
 using ECommerceApp.Services;
@@ -6,6 +7,10 @@ using ECommerceApp.Services.Profiles;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Aqui se realiza el mapeo de la configuracion de la aplicacion
+// en una clase fuertemente tipada
+builder.Services.Configure<AppConfig>(builder.Configuration);
 
 // Add services to the container.
 builder.Services.AddDbContext<ECommerceDbContext>(options =>
@@ -25,6 +30,8 @@ builder.Services.AddTransient<IProductoRepository, ProductoRepository>();
 
 builder.Services.AddTransient<IProductoService, ProductoService>();
 builder.Services.AddTransient<ICategoriaService, CategoriaService>();
+
+builder.Services.AddTransient<IFileUploader, FileUploader>();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();

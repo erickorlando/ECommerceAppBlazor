@@ -12,12 +12,17 @@ public class ProductoService : IProductoService
     private readonly IProductoRepository _repository;
     private readonly ILogger<ProductoService> _logger;
     private readonly IMapper _mapper;
+    private readonly IFileUploader _fileUploader;
 
-    public ProductoService(IProductoRepository repository, ILogger<ProductoService> logger, IMapper mapper)
+    public ProductoService(IProductoRepository repository, 
+        ILogger<ProductoService> logger, 
+        IMapper mapper,
+        IFileUploader fileUploader)
     {
         _repository = repository;
         _logger = logger;
         _mapper = mapper;
+        _fileUploader = fileUploader;
     }
 
     public async Task<PaginationResponse<ProductoDto>> ListAsync(string? filter, int page, int rows)
@@ -97,6 +102,8 @@ public class ProductoService : IProductoService
         {
             var producto = _mapper.Map<Producto>(request);
 
+            producto.UrlImagen = await _fileUploader.UploadFileAsync(request.Base64Image, request.FileName);
+
             response.Data = await _repository.AddAsync(producto);
             response.Success = true;
         }
@@ -124,6 +131,11 @@ public class ProductoService : IProductoService
             // Aqui se hace el mapeo a una instancia ya existente
             // y se reemplazan sus valores
             _mapper.Map(request, producto);
+
+            if (!string.IsNullOrWhiteSpace(request.Base64Image))
+            {
+                producto.UrlImagen = await _fileUploader.UploadFileAsync(request.Base64Image, request.FileName);
+            }
 
             await _repository.UpdateAsync();
             response.Success = true;
