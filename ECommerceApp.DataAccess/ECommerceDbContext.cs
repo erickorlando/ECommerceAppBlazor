@@ -1,9 +1,10 @@
 ﻿using ECommerceApp.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace ECommerceApp.DataAccess;
 
-public partial class ECommerceDbContext : DbContext
+public partial class ECommerceDbContext : IdentityDbContext<IdentityUserECommerce>
 {
 
     public ECommerceDbContext(DbContextOptions<ECommerceDbContext> options)
@@ -23,6 +24,8 @@ public partial class ECommerceDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+        
         modelBuilder.Entity<Venta>(entity =>
         {
             entity.HasOne(d => d.IdClienteNavigation).WithMany(p => p.Venta)

@@ -1,4 +1,6 @@
-﻿<h3>Producto</h3>
+﻿@inject SweetAlertService Swal
+
+<h3>Producto</h3>
 
 <EditForm Model="Request" OnValidSubmit="Guardar">
     
@@ -42,6 +44,28 @@
             <InputText class="form-control" id="comments" @bind-Value="@Request.Comentarios" />
         </div>
     </div>
+    <div class="card">
+        <div class="card-body">
+            @if (Request.Base64Image is not null)
+            {
+                <div style="margin:10px">
+                    <img src="data:image/jpeg;base64,@Request.Base64Image" alt="@Request.Nombre" style="width: 300px"/>
+                </div>
+            }
+            else
+            {
+                <img src="@Request.UrlImagen" alt="@Request.Nombre" style="width: 300px"/>    
+            }
+        </div>
+        <div class="card-footer">
+            <div>
+                <InputFile id="file" accept="image/png, image/jpeg, .webp" 
+                           OnChange="OnFileUploaded" 
+                           style="display: none"/>
+                <label for="file" class="btn btn-warning"><span class="oi oi-camera-slr"></span>Imagen</label>
+            </div>
+        </div>
+    </div>
     <button type="submit" class="btn btn-success">Guardar</button>
 
 </EditForm>
@@ -65,6 +89,24 @@
     public async Task Guardar()
     {
         await GuardarCallBack.InvokeAsync();
+    }
+
+    private async Task OnFileUploaded(InputFileChangeEventArgs e)
+    {
+        try
+        {
+            var imagen = e.File;
+            var buffer = new byte[imagen.Size];
+            var _ = await imagen.OpenReadStream().ReadAsync(buffer);
+
+            Request.Base64Image = Convert.ToBase64String(buffer);
+            Request.FileName = imagen.Name;
+            Request.UrlImagen = null;
+        }
+        catch (Exception ex)
+        {
+            await Swal.FireAsync("Error de archivo", ex.Message);
+        }
     }
 
 }

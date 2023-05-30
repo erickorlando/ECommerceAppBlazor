@@ -13,7 +13,7 @@ public class ProxyProductos
         _httpClient = httpClient;
     }
 
-    public async Task<PaginationResponse<ProductoDto>> ListarProductos(string? filter, int page=1, int rows = 5)
+    public async Task<PaginationResponse<ProductoDto>> ListarProductos(string? filter, int page = 1, int rows = 5)
     {
         var response = await _httpClient.GetFromJsonAsync<PaginationResponse<ProductoDto>>($"api/Productos?filter={filter ?? string.Empty}&page={page}&rows={rows}");
         if (response != null)
@@ -22,6 +22,16 @@ public class ProxyProductos
         }
 
         return new PaginationResponse<ProductoDto>();
+    }
+    public async Task<ICollection<ProductoDto>> ListarProductos(string filter)
+    {
+        var response = await _httpClient.GetFromJsonAsync<BaseResponseGeneric<ICollection<ProductoDto>>>($"api/Productos/List?filtro={filter}");
+        if (response!.Success)
+        {
+            return response.Data!;
+        }
+
+        throw new ApplicationException(response.ErrorMessage);
     }
 
     public async Task<ProductoDtoRequest> GetProducto(int id)

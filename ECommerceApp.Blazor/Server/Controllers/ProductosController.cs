@@ -22,6 +22,14 @@ public class ProductosController : ControllerBase
 
         return Ok(response);
     }
+    
+    [HttpGet("[action]")]
+    public async Task<IActionResult> List(string? filtro)
+    {
+        var response = await _service.ListAsync(filtro);
+
+        return Ok(response);
+    }
 
     [HttpPost]
     public async Task<IActionResult> Post([FromBody] ProductoDtoRequest request)

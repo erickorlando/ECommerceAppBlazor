@@ -1,9 +1,52 @@
 ﻿@page "/"
 @page "/index"
+@inject ProxyProductos ProxyProductos
+@inject SweetAlertService Swal
 
-<PageTitle>Carrito de Compras</PageTitle>
+<PageTitle>Tienda Oficial</PageTitle>
+
+@if (Productos == null)
+{
+    <LoadingComponent />
+}
+else
+{
+    <div class="container">
+        <div style="display: flex; flex-wrap: wrap; gap: 1em; margin-bottom: 10px; justify-content:center">
+            @foreach (var producto in Productos)
+            {
+                // Componente para mostrar el producto.
+                <div class="card" style="width: 200px; height: 300px; position: relative;cursor: pointer">
+                    <div class="card-header" 
+                         style="margin-bottom: 10px; display: flex; justify-content: space-between;margin-top:5px">
+                        <span style="text-transform: uppercase">@producto.Nombre</span>
+                        <span>@producto.Categoria</span>
+                    </div>
+                    <div class="card-body" style="background-image: url('@producto.UrlImagen'); background-repeat: no-repeat; background-size: cover;">
+                        
+                    </div>
+                    <div class="card-footer" style="font-weight: bold; margin-bottom: 10px; font-weight: bold; display: inline-flex; justify-content: space-between;margin-top:5px">
+                        <span>S/. @producto.PrecioUnitario.ToString("N2")</span>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
 
 @code
 {
-   
+    public ICollection<ProductoDto>? Productos { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            Productos = await ProxyProductos.ListarProductos(string.Empty);
+        }
+        catch (Exception ex)
+        {
+            await Swal.FireAsync("Error", ex.Message, SweetAlertIcon.Error);
+        }
+    }
 }
