@@ -1,4 +1,5 @@
 ﻿using ECommerceApp.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,6 +26,24 @@ public partial class ECommerceDbContext : IdentityDbContext<IdentityUserECommerc
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        // AspNetUsers
+        modelBuilder.Entity<IdentityUserECommerce>(e =>
+        {
+            e.ToTable(name: "Usuario");
+        });
+
+        // AspNetRoles
+        modelBuilder.Entity<IdentityRole>(e =>
+        {
+            e.ToTable(name: "Rol");
+        });
+
+        // AspNetUserRoles
+        modelBuilder.Entity<IdentityUserRole<string>>(e =>
+        {
+            e.ToTable("UsuarioRol");
+        });
         
         modelBuilder.Entity<Venta>(entity =>
         {

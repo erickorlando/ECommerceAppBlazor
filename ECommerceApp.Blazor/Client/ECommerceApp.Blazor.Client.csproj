@@ -8,9 +8,13 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.1" />
+    <PackageReference Include="Blazored.SessionStorage" Version="2.3.0" />
+    <PackageReference Include="Blazored.Toast" Version="4.1.0" />
     <PackageReference Include="CurrieTechnologies.Razor.SweetAlert2" Version="5.5.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="7.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.5" PrivateAssets="all" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.30.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,15 +27,22 @@
 
   <ItemGroup>
     <_ContentIncludedByDefault Remove="Pages\Categorias\CategoriasListPage.razor" />
+    <_ContentIncludedByDefault Remove="Shared\LoginLayout.razor" />
     <_ContentIncludedByDefault Remove="Shared\Productos\ProductoEdit.razor" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Auth\" />
+    <Folder Include="Pages\Auth\" />
     <Folder Include="Services\" />
   </ItemGroup>
 
   <ItemGroup>
     <UpToDateCheckInput Remove="Pages\Categorias\CategoriasListPage.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Shared\LoginLayout.razor" />
   </ItemGroup>
 
 </Project>

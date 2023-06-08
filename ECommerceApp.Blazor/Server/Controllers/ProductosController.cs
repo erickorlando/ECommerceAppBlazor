@@ -1,11 +1,13 @@
 ﻿using ECommerceApp.Blazor.Shared.Request;
 using ECommerceApp.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ECommerceApp.Blazor.Server.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class ProductosController : ControllerBase
 {
     private readonly IProductoService _service;
@@ -16,6 +18,7 @@ public class ProductosController : ControllerBase
     }
 
     [HttpGet]
+    
     public async Task<IActionResult> Get(string? filter, int page = 1, int rows = 5)
     {
         var response = await _service.ListAsync(filter, page, rows);
