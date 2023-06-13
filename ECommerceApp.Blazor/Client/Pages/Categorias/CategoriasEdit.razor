@@ -1,6 +1,7 @@
 ﻿@page "/categorias/editar/{Id:int}"
 @inject ProxyCategorias ProxyCategorias
 @inject NavigationManager NavigationManager
+@attribute [Authorize(Roles = "Admin")] 
 
 <CategoriaEditComponent Request="Request" OnSave="ActualizarProducto" />
 

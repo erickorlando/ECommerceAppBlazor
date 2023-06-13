@@ -1,5 +1,11 @@
 ﻿@inherits LayoutComponentBase
 
+@inject SweetAlertService Swal
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+
+<BlazoredToasts />
+
 <div class="page">
     <div class="sidebar">
         <NavMenu />
@@ -7,7 +13,15 @@
 
     <main>
         <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+            <AuthorizeView>
+                <Authorized>
+                    <h5>@context.User.Identity!.Name</h5>
+                    <NavLink @onclick="CerrarSesion"><span class="oi oi-fullscreen-exit"></span></NavLink>
+                </Authorized>
+                <NotAuthorized>
+                    <NavLink href="login">Iniciar Sesión</NavLink>
+                </NotAuthorized>
+            </AuthorizeView>
         </div>
 
         <article class="content px-4">
@@ -15,3 +29,25 @@
         </article>
     </main>
 </div>
+
+@code
+{
+    private async Task CerrarSesion()
+    {
+        var result = await Swal.FireAsync(new SweetAlertOptions
+        {
+            Title = "Desea salir?",
+            Icon = SweetAlertIcon.Question,
+            ShowCancelButton = true,
+            ConfirmButtonText = "Si",
+            CancelButtonText = "No"
+        });
+
+        if (result.IsConfirmed)
+        {
+            var auth = (AuthenticationService)AuthenticationStateProvider;
+            await auth.Authenticate(null);
+            NavigationManager.NavigateTo("/", forceLoad: true);
+        }
+    }
+}

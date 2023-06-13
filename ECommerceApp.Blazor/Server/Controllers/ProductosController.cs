@@ -27,6 +27,7 @@ public class ProductosController : ControllerBase
     }
     
     [HttpGet("[action]")]
+    [AllowAnonymous]
     public async Task<IActionResult> List(string? filtro)
     {
         var response = await _service.ListAsync(filtro);
@@ -35,6 +36,7 @@ public class ProductosController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Post([FromBody] ProductoDtoRequest request)
     {
         return Ok(await _service.AddAsync(request));
@@ -49,12 +51,14 @@ public class ProductosController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Put(int id, ProductoDtoRequest request)
     {
         return Ok(await _service.UpdateAsync(id, request));
     }
 
     [HttpDelete("{id:int}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Delete(int id)
     {
         return Ok(await _service.DeleteAsync(id));

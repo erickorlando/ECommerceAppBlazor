@@ -1,6 +1,8 @@
 ﻿@page "/productos/list"
+@using Microsoft.AspNetCore.Authorization
 @inject NavigationManager NavigationManager
 @inject ProxyProductos ProxyProductos
+@attribute [Authorize(Roles = "Admin")]
 
 @if (_cargado)
 {
