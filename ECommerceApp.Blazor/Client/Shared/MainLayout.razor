@@ -16,10 +16,11 @@
             <AuthorizeView>
                 <Authorized>
                     <h5>@context.User.Identity!.Name</h5>
-                    <NavLink @onclick="CerrarSesion"><span class="oi oi-fullscreen-exit"></span></NavLink>
+                    <NavLink @onclick="CerrarSesion"><span class="oi auth"></span></NavLink>
                 </Authorized>
                 <NotAuthorized>
                     <NavLink href="login">Iniciar Sesión</NavLink>
+                    <NavLink href="register">Registrarse</NavLink>
                 </NotAuthorized>
             </AuthorizeView>
         </div>
