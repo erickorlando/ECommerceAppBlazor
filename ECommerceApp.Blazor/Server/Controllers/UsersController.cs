@@ -30,4 +30,20 @@ public class UsersController : ControllerBase
     {
         return Ok(await _service.RegisterAsync(request));
     }
+
+    // POST: api/Users/SendTokenToResetPassword
+    [HttpPost]
+    public async Task<IActionResult> SendTokenToResetPassword(GenerateTokenToResetDtoRequest request)
+    {
+        var response = await _service.SendTokenToResetPasswordAsync(request);
+        return response.Success ? Ok(response) : BadRequest(response);
+    }
+
+    // POST: api/Users/ResetPassword
+    [HttpPost]
+    public async Task<IActionResult> ResetPassword(ResetPasswordDtoRequest request)
+    {
+        var response = await _service.ResetPasswordAsync(request);
+        return response.Success ? Ok(response) : BadRequest(response);
+    }
 }

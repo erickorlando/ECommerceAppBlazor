@@ -30,13 +30,33 @@ public class ProxyUser
         var response = await _httpClient.PostAsJsonAsync("api/Users/Register", request);
         if (response.IsSuccessStatusCode)
         {
-            var resultado = await response.Content.ReadFromJsonAsync<BaseResponseGeneric<string>>();
+            var resultado = await response.Content.ReadFromJsonAsync<BaseResponse>();
             if (resultado!.Success == false)
                 throw new InvalidOperationException(resultado.ErrorMessage);
         }
         else
         {
             throw new InvalidOperationException(response.ReasonPhrase);
+        }
+    }
+
+    public async Task SendTokenToResetPassword(GenerateTokenToResetDtoRequest request)
+    {
+        var response = await _httpClient.PostAsJsonAsync("api/Users/SendTokenToResetPassword", request);
+        if (!response.IsSuccessStatusCode)
+        {
+            var jsonResponse = await response.Content.ReadFromJsonAsync<BaseResponse>();
+            throw new InvalidOperationException(jsonResponse!.ErrorMessage);
+        }
+    }
+
+    public async Task ResetPassword(ResetPasswordDtoRequest request)
+    {
+        var response = await _httpClient.PostAsJsonAsync("api/Users/ResetPassword", request);
+        if (!response.IsSuccessStatusCode)
+        {
+            var jsonResponse = await response.Content.ReadFromJsonAsync<BaseResponse>();
+            throw new InvalidOperationException(jsonResponse!.ErrorMessage);
         }
     }
 }

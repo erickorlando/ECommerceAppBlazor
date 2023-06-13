@@ -57,6 +57,7 @@ builder.Services.AddTransient<ICategoriaService, CategoriaService>();
 builder.Services.AddTransient<IUserService, UserService>();
 
 builder.Services.AddTransient<IFileUploader, FileUploader>();
+builder.Services.AddTransient<IEmailService, EmailService>();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
