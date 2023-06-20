@@ -51,10 +51,12 @@ builder.Services.AddAutoMapper(config =>
 builder.Services.AddTransient<ICategoriaRepository, CategoriaRepository>();
 builder.Services.AddTransient<IProductoRepository, ProductoRepository>();
 builder.Services.AddTransient<IClienteRepository, ClienteRepository>();
+builder.Services.AddTransient<IVentaRepository, VentaRepository>();
 
 builder.Services.AddTransient<IProductoService, ProductoService>();
 builder.Services.AddTransient<ICategoriaService, CategoriaService>();
 builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<IVentaService, VentaService>();
 
 builder.Services.AddTransient<IFileUploader, FileUploader>();
 builder.Services.AddTransient<IEmailService, EmailService>();

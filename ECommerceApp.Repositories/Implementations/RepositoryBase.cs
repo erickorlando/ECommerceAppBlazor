@@ -84,4 +84,5 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where T
             throw new InvalidOperationException($"No se encontro el registro con el Id {id}");
         }
     }
+
 }
