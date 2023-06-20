@@ -46,6 +46,7 @@ builder.Services.AddAutoMapper(config =>
 {
     config.AddProfile<ProductoProfile>();
     config.AddProfile<CategoriaProfile>();
+    config.AddProfile<VentaProfile>();
 });
 
 builder.Services.AddTransient<ICategoriaRepository, CategoriaRepository>();

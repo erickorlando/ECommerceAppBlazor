@@ -30,4 +30,6 @@ public partial class Venta : EntityBase
     [ForeignKey("IdCliente")]
     [InverseProperty("Venta")]
     public virtual Cliente IdClienteNavigation { get; set; } = null!;
+
+    
 }

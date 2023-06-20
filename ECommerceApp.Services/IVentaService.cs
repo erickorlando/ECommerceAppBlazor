@@ -6,4 +6,7 @@ namespace ECommerceApp.Services;
 public interface IVentaService
 {
     Task<BaseResponse> AddAsync(string email, SaleDtoRequest request);
+
+    Task<PaginationResponse<VentaDtoResponse>> ListarVentasAsync(DateTime fechaInicio, DateTime fechaFin, int page,
+        int cantidad);
 }

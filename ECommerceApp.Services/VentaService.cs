@@ -89,4 +89,27 @@ public class VentaService : IVentaService
 
         return response;
     }
+
+    public async Task<PaginationResponse<VentaDtoResponse>> ListarVentasAsync(DateTime fechaInicio, DateTime fechaFin, int page, int cantidad)
+    {
+        var response = new PaginationResponse<VentaDtoResponse>();
+
+        try
+        {
+            var tupla = await _repository.ListarVentas(fechaInicio, fechaFin, page, cantidad);
+            var totalPages = tupla.Total / cantidad;
+            if (tupla.Total % cantidad != 0)
+                totalPages++;
+            response.Data = _mapper.Map<ICollection<VentaDtoResponse>>(tupla.Collection);
+            response.TotalPages = totalPages;
+            response.Success = true;
+        }
+        catch (Exception ex)
+        {
+             response.ErrorMessage = "Error al listar las ventas";
+            _logger.LogError(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
+        }
+
+        return response;
+    }
 }
