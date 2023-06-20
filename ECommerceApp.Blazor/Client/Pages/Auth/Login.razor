@@ -45,14 +45,18 @@
     </div>
 </div>
 
+<LoadingComponent IsLoading="IsLoading" />
+
 @code {
 
     private LoginDtoRequest LoginDtoRequest { get; set; } = new LoginDtoRequest();
+    public bool IsLoading { get; set; }
 
     private async Task ValidLogin()
     {
         try
         {
+            IsLoading = true;
             var response = await ProxyUser.Login(LoginDtoRequest);
             if (response.Success)
             {
@@ -69,6 +73,10 @@
         catch (Exception ex)
         {
             ToastService.ShowError(ex.Message);
+        }
+        finally
+        {
+            IsLoading = false;
         }
     }
 

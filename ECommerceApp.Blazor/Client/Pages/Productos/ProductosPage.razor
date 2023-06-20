@@ -1,25 +1,20 @@
 ﻿@page "/productos/list"
-@using Microsoft.AspNetCore.Authorization
 @inject NavigationManager NavigationManager
 @inject ProxyProductos ProxyProductos
+@inject IToastService ToastService
 @attribute [Authorize(Roles = "Admin")]
 
-@if (_cargado)
-{
-    <ListaProductos @ref="Componente" Lista="ListaDeProductos" OnSearch="CargarLista" OnEliminar="EliminarRegistro" />
-    <DataPager @ref="Paginador" Result="PagedResult" OnPageChanged="PaginaCambiada" OnPageSizeChanged="FilasPorPagina"></DataPager>
-}
-else
-{
-    <LoadingComponent />
-}
+<ListaProductos @ref="Componente" Lista="ListaDeProductos" OnSearch="CargarLista" OnEliminar="EliminarRegistro" />
+<DataPager @ref="Paginador" Result="PagedResult" OnPageChanged="PaginaCambiada" OnPageSizeChanged="FilasPorPagina"></DataPager>
+
+<LoadingComponent IsLoading="_cargando" />
 
 <button @onclick="CargarLista" class="btn btn-success">Cargar Lista</button>
 <button @onclick="CrearProducto" class="btn btn-success">Crear Producto</button>
 
 @code {
 
-    private bool _cargado = false;
+    private bool _cargando;
 
     public ICollection<ProductoDto>? ListaDeProductos { get; set; }
 
@@ -47,15 +42,25 @@ else
 
     private async Task CargarLista()
     {
-        _cargado = false;
-        var response = await ProxyProductos.ListarProductos(Componente?.TextoBusqueda, PagedResult.CurrentPage, PagedResult.RowsPerPage);
-        if (response.Success)
+        try
         {
-            ListaDeProductos = response.Data!;
-            PagedResult.Results = ListaDeProductos;
-            PagedResult.RowCount = ListaDeProductos.Count;
-            PagedResult.TotalPages = response.TotalPages;
-            _cargado = true;
+            _cargando = true;
+            var response = await ProxyProductos.ListarProductos(Componente?.TextoBusqueda, PagedResult.CurrentPage, PagedResult.RowsPerPage);
+            if (response.Success)
+            {
+                ListaDeProductos = response.Data!;
+                PagedResult.Results = ListaDeProductos;
+                PagedResult.RowCount = ListaDeProductos.Count;
+                PagedResult.TotalPages = response.TotalPages;
+            }
+        }
+        catch (Exception ex)
+        {
+            ToastService.ShowError(ex.Message);
+        }
+        finally
+        {
+            _cargando = false;
         }
     }
 

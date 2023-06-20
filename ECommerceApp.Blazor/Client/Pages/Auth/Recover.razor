@@ -15,7 +15,7 @@
                     <EditForm Model="Request" OnSubmit="OnSubmit">
                         <div class="form-floating mb-3">
                             <input class="form-control" id="inputEmail" type="email" placeholder="admin@example.com"
-                            @bind-value="Request.Email" autocomplete="off" />
+                                   @bind-value="Request.Email" autocomplete="off" />
                             <label for="inputEmail">Correo</label>
                         </div>
                         <div class="d-grid gap-1 mt-4 mb-0">
@@ -36,19 +36,28 @@
     </div>
 </div>
 
+<LoadingComponent IsLoading="IsLoading" />
+
 @code {
     private GenerateTokenToResetDtoRequest Request { get; set; } = new GenerateTokenToResetDtoRequest();
+
+    public bool IsLoading { get; set; }
 
     private async Task OnSubmit()
     {
         try
         {
+            IsLoading = true;
             await ProxyUser.SendTokenToResetPassword(Request);
             ToastService.ShowInfo("Se ha enviado un correo con las instrucciones para recuperar su cuenta");
         }
         catch (Exception ex)
         {
             await Swal.FireAsync("Error", ex.Message);
+        }
+        finally
+        {
+            IsLoading = false;
         }
     }
 }

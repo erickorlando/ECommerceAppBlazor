@@ -6,6 +6,8 @@
 
 <CategoriaListComponent List="List" OnDelete="EliminarCategoria" OnEdit="EditarCategoria" />
 
+<LoadingComponent IsLoading="@(List is null)" />
+
 <button class="btn btn-primary" @onclick="AgregarCategoria">Agregar Categoria</button>
 
 @code {

@@ -5,11 +5,7 @@
 
 <PageTitle>Tienda Oficial</PageTitle>
 
-@if (Productos == null)
-{
-    <LoadingComponent />
-}
-else
+@if (Productos is not null)
 {
     <div class="container">
         <div style="display: flex; flex-wrap: wrap; gap: 1em; margin-bottom: 10px; justify-content:center">
@@ -33,6 +29,8 @@ else
         </div>
     </div>
 }
+
+<LoadingComponent IsLoading="@(Productos is null)" />
 
 @code
 {
