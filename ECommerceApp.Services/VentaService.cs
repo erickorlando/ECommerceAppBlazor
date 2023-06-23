@@ -64,7 +64,9 @@ public class VentaService : IVentaService
                     Correlativo = contador
                 };
 
-                ventaDetalle.Total = ventaDetalle.PrecioUnitario * ventaDetalle.Cantidad;
+                var montoSinImpuesto = ventaDetalle.PrecioUnitario / 1.18m;
+
+                ventaDetalle.Total = montoSinImpuesto * ventaDetalle.Cantidad;
 
                 // Agregamos los detalles al contexto de la venta
                 await _repository.AddVentaDetalleAsync(ventaDetalle);
@@ -107,6 +109,25 @@ public class VentaService : IVentaService
         catch (Exception ex)
         {
              response.ErrorMessage = "Error al listar las ventas";
+            _logger.LogError(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
+        }
+
+        return response;
+    }
+
+    public async Task<BaseResponseGeneric<DashboardDtoResponse>> GetDashboardAsync(DateTime fechaInicio, DateTime fechaFin)
+    {
+        var response = new BaseResponseGeneric<DashboardDtoResponse>();
+
+        try
+        {
+            var dashboard = await _repository.GetDashboardInfoAsync(fechaInicio, fechaFin);
+            response.Data = _mapper.Map<DashboardDtoResponse>(dashboard);
+            response.Success = true;
+        }
+        catch (Exception ex)
+        {
+            response.ErrorMessage = "Error al obtener el dashboard";
             _logger.LogError(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
         }
 

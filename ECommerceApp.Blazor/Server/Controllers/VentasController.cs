@@ -46,4 +46,19 @@ public class VentasController : ControllerBase
             return BadRequest("Formato de fecha incorrecto");
         }
     }
+
+    [HttpGet("dashboard")]
+    public async Task<IActionResult> GetDashboard(string fechaInicio, string fechaFin)
+    {
+        try
+        {
+            return Ok(await _service.GetDashboardAsync(DateTime.Parse(fechaInicio), 
+                DateTime.Parse(fechaFin)));
+        }
+        catch (FormatException e)
+        {
+             _logger.LogWarning(e, "{fechaInicio} {fechaFin} {Message}", fechaInicio, fechaFin, e.Message);
+            return BadRequest("Formato de fecha incorrecto");
+        }
+    }
 }

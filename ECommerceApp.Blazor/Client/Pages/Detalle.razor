@@ -1,0 +1,77 @@
+﻿@page "/detalle/{Id:int}"
+@using ECommerceApp.Blazor.Shared
+@inject ProxyProductos ProxyProductos
+@inject CarritoServicio CarritoServicio
+
+<div class="container px-4 px-lg-5 my-5">
+    @if (Modelo is not null)
+    {
+        <div class="row gx-4 gx-lg-5 align-items-center">
+            <div class="col-md-6">
+                <img class="card-img-top border-dark border-1"
+                     src="@Modelo.UrlImagen" style="width: 100%"/>
+            </div>
+            <div class="col-md-6">
+                <h1 class="display-5 fw-bolder">@Modelo.Nombre</h1>
+                <div class="fs-5 mb-5">
+                    <span>S/. @Modelo.PrecioUnitario.ToString("N2")</span>
+                </div>
+                <p class="lead">@Modelo.Comentarios</p>
+                <div class="d-flex">
+                    <input class="form-control text-center me-3" type="number" min="1"
+                           @bind-value="Cantidad" style="width: 60px"/>
+                    <button class="btn btn-outline-dark flex-shrink-0 me-3"
+                            @onclick="() => AgregarCarrito(Modelo)">
+                        <i class="fa fa-cart-plus me-1"></i>
+                        Agregar al carrito
+                    </button>
+                    <NavLink class="btn btn-outline-dark flex-shrink-0" href="index">
+                        <i class="fa fa-backward me-1"></i>
+                        Volver
+                    </NavLink>
+                </div>
+            </div>
+        </div>
+    }
+    
+    <LoadingComponent IsLoading="(Modelo is null)"></LoadingComponent>
+</div>
+
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    public ProductoDto? Modelo { get; set; }
+
+    public int Cantidad { get; set; } = 1;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var response = await ProxyProductos.GetProducto(Id);
+        Modelo = new ProductoDto()
+        {
+            Id = Id,
+            CodigoSku = response.CodigoSku,
+            Nombre = response.Nombre,
+            PrecioUnitario = response.PrecioUnitario,
+            CategoriaId = response.CategoriaId,
+            Comentarios = response.Comentarios,
+            UrlImagen = response.UrlImagen
+        };
+    }
+
+    private async Task AgregarCarrito(ProductoDto model)
+    {
+        var carrito = new CarritoDto()
+        {
+            ProductoDto = model,
+            Cantidad = Cantidad,
+            Precio = model.PrecioUnitario ,
+            Total = Cantidad * model.PrecioUnitario
+        };
+
+        await CarritoServicio.AgregarCarrito(carrito);
+    }
+
+}

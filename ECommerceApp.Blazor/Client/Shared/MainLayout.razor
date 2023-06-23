@@ -5,50 +5,13 @@
 @inject NavigationManager NavigationManager
 
 <BlazoredToasts />
+<NavMenu />
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
-
-    <main>
-        <div class="top-row px-4">
-            <AuthorizeView>
-                <Authorized>
-                    <h5>@context.User.Identity!.Name</h5>
-                    <NavLink @onclick="CerrarSesion">Cerrar Sesión</NavLink>
-                </Authorized>
-                <NotAuthorized>
-                    <NavLink href="login">Iniciar Sesión</NavLink>
-                    <NavLink href="register">Registrarse</NavLink>
-                </NotAuthorized>
-            </AuthorizeView>
-        </div>
-
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
+<div class="container content">
+    @Body
 </div>
 
 @code
 {
-    private async Task CerrarSesion()
-    {
-        var result = await Swal.FireAsync(new SweetAlertOptions
-        {
-            Title = "Desea salir?",
-            Icon = SweetAlertIcon.Question,
-            ShowCancelButton = true,
-            ConfirmButtonText = "Si",
-            CancelButtonText = "No"
-        });
-
-        if (result.IsConfirmed)
-        {
-            var auth = (AuthenticationService)AuthenticationStateProvider;
-            await auth.Authenticate(null);
-            NavigationManager.NavigateTo("/", forceLoad: true);
-        }
-    }
+    
 }

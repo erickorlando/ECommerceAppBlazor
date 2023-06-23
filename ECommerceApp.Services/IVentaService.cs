@@ -9,4 +9,6 @@ public interface IVentaService
 
     Task<PaginationResponse<VentaDtoResponse>> ListarVentasAsync(DateTime fechaInicio, DateTime fechaFin, int page,
         int cantidad);
+
+    Task<BaseResponseGeneric<DashboardDtoResponse>> GetDashboardAsync(DateTime fechaInicio, DateTime fechaFin);
 }

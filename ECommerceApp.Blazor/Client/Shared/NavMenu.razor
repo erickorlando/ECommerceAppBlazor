@@ -1,38 +1,80 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">Tienda Oficial</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+﻿@inject CarritoServicio CarritoServicio
+@inject SweetAlertService Swal
+@inject NavigationManager NavigationManager
+@using AutoMapper.Execution
+@implements IDisposable
+@inject AuthenticationStateProvider AutenticationStateProvider
+
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+    <div class="container">
+        <img src="assets/images/store.png" alt="logo"/>
+        <a class="navbar-brand" href="#">Tienda Oficial</a>
+        <button type="button" class="navbar-toggler"
+                data-bs-toggle="collapse"
+                data-bs-target=".navbar-collapse"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="False"
+                aria-label="Toggle Navigation"
+                @onclick="ToggleNavMenu">
             <span class="navbar-toggler-icon"></span>
         </button>
+        <div class="@NavMenuCssClass navbar-collapse d-sm-inline-flex justify-content-center">
+            <ul class="navbar-nav me-auto mb-2">
+                <AuthorizeView Roles="Admin">
+                    <Authorized>
+                        <li class="nav-item">
+                            <NavLink class="nav-link" href="dashboard">
+                                <i class="fa fa-dashboard mx-1"></i>Dashboard
+                            </NavLink>
+                        </li>
+                        <li class="nav-item">
+                            <NavLink class="nav-link" href="categorias/list">
+                                <i class="fa fa-group mx-1"></i>Categorias
+                            </NavLink>
+                        </li>
+                        <li class="nav-item">
+                            <NavLink class="nav-link" href="productos/list">
+                                <i class="fa fa-product-hunt mx-1"></i>Productos
+                            </NavLink>
+                        </li>
+                    </Authorized>
+                    <NotAuthorized>
+                        <li class="nav-item">
+                            <NavLink class="nav-link" href="/">
+                                <i class="fa fa-home mx-1"></i>Tienda
+                            </NavLink>
+                        </li>
+                    </NotAuthorized>
+                </AuthorizeView>
+            </ul>
+            
+            <AuthorizeView>
+                <Authorized>
+                    <span class="navbar-text me-3">
+                        <i class="fa fa-user-circle mx-2"></i>@context.User.Identity!.Name
+                    </span>
+                </Authorized>
+            </AuthorizeView>
+            
+            <NavLink class="btn btn-outline-success ms-auto ms-md-0 me-3" href="cart">
+                <i class="fa fa-shopping-cart mx-1"></i>Carrito
+                <span class="badge bg-info text-white ms-1 rounded-pill">@MostrarCantidadCarrito()</span>
+            </NavLink>
+            <AuthorizeView>
+                <Authorized>
+                    <button class="btn btn-outline-primary ms-auto ms-md-0 me-3" @onclick="CerrarSesion">
+                        <i class="fa fa-sign-out me-1"></i> Salir
+                    </button>
+                </Authorized>
+                <NotAuthorized>
+                    <NavLink class="btn btn-outline-primary ms-auto ms-md-0 me-3" href="login">
+                        <i class="fa fa-sign-in me-1"></i>Iniciar Sesion
+                    </NavLink>
+                </NotAuthorized>
+            </AuthorizeView>
+        </div>
     </div>
-</div>
-
-<div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Inicio
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="categorias/list">
-                <span class="oi oi-cog" aria-hidden="true"></span> Categorías
-            </NavLink>
-        </div>
-        <AuthorizeView>
-            <Authorized>
-                @if (context.User.IsInRole("Admin"))
-                {
-                    <div class="nav-item px-3">
-                        <NavLink class="nav-link" href="productos/list">
-                            <span class="oi oi-basket" aria-hidden="true"></span> Productos
-                        </NavLink>
-                    </div>
-                }
-            </Authorized>
-        </AuthorizeView>
-    </nav>
-</div>
+</nav>
 
 @code {
     private bool collapseNavMenu = true;
@@ -43,4 +85,39 @@
     {
         collapseNavMenu = !collapseNavMenu;
     }
+
+    protected override void OnInitialized()
+    {
+        CarritoServicio.ActualizarVista += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        CarritoServicio.ActualizarVista += StateHasChanged;
+    }
+
+    private int MostrarCantidadCarrito()
+    {
+        return CarritoServicio.CantidadProductos();
+    }
+
+    private async Task CerrarSesion()
+    {
+        var result = await Swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "Desea salir?",
+                Icon = SweetAlertIcon.Question,
+                ShowCancelButton = true,
+                ConfirmButtonText = "Si",
+                CancelButtonText = "No"
+            });
+
+        if (result.IsConfirmed)
+        {
+            var auth = (AuthenticationService)AutenticationStateProvider;
+            await auth.Authenticate(null);
+            NavigationManager.NavigateTo("/", forceLoad: true);
+        }
+    }
+
 }

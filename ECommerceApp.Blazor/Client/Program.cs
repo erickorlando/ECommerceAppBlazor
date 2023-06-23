@@ -1,3 +1,4 @@
+using Blazored.LocalStorage;
 using Blazored.SessionStorage;
 using Blazored.Toast;
 using CurrieTechnologies.Razor.SweetAlert2;
@@ -17,10 +18,14 @@ builder.Services.AddSingleton(sp => new HttpClient { BaseAddress = new Uri(build
 builder.Services.AddScoped<ProxyCategorias>();
 builder.Services.AddScoped<ProxyProductos>();
 builder.Services.AddScoped<ProxyUser>();
+builder.Services.AddScoped<ProxyVentas>();
+
+builder.Services.AddScoped<CarritoServicio>();
 
 builder.Services.AddSweetAlert2();
 builder.Services.AddBlazoredToast();
 builder.Services.AddBlazoredSessionStorage();
+builder.Services.AddBlazoredLocalStorage();
 
 // Habilitamos el contexto de seguridad en Blazor
 builder.Services.AddScoped<AuthenticationStateProvider, AuthenticationService>();

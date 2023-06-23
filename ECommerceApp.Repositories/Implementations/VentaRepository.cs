@@ -59,4 +59,14 @@ public class VentaRepository : RepositoryBase<Venta>, IVentaRepository
 
         return await Task.FromResult((query.ToList(), total));
     }
+
+    public async Task<DashboardInfo> GetDashboardInfoAsync(DateTime fechaInicio, DateTime fechafin)
+    {
+        var connection = new SqlConnection(Context.Database.GetConnectionString());
+
+        var query = connection.QuerySingle<DashboardInfo>("EXEC dbo.uspDashboard @fechaInicio, @fechaFin",
+            new { fechaInicio, fechafin });
+
+        return await Task.FromResult(query);
+    }
 }

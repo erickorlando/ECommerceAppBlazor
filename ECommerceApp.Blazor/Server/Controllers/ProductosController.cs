@@ -43,6 +43,7 @@ public class ProductosController : ControllerBase
     }
 
     [HttpGet("{id:int}")]
+    [AllowAnonymous]
     public async Task<IActionResult> Get(int id)    
     {
         var response = await _service.FindByIdAsync(id);

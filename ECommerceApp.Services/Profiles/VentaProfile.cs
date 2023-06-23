@@ -9,5 +9,6 @@ public class VentaProfile : Profile
     public VentaProfile()
     {
         CreateMap<VentaInfo, VentaDtoResponse>();
+        CreateMap<DashboardInfo, DashboardDtoResponse>();
     }
 }

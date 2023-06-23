@@ -9,4 +9,5 @@ public interface IVentaRepository : IRepositoryBase<Venta>
     Task RollBackAsync();
     Task AddVentaDetalleAsync(VentaDetalle detalle);
     Task<(ICollection<VentaInfo> Collection, int Total)> ListarVentas(DateTime fechaInicio, DateTime fechaFin, int pagina, int cantidad);
+    Task<DashboardInfo> GetDashboardInfoAsync(DateTime fechaInicio, DateTime fechafin);
 }
